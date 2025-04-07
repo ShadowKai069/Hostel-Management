@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hostel Management Statistics</title>
+    
+    <!-- Bootstrap & FontAwesome -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+    <style>
+        /* General Styling */
+        body {
+            background-color: #f4f4f4;
+        }
+
+        /* Navigation */
+        .home {
+            background-image: linear-gradient(to right, blue, rgb(247, 147, 69));
+            color: #FFF;
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            width: 100%;
+        }
+
+        .home-logo img {
+            width: 100%;
+            max-width: 150px;
+        }
+
+        /* Navigation Links */
+        .menu_links {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            text-align: right;
+        }
+
+        .menu_links li {
+            display: inline;
+            margin-left: 20px;
+        }
+
+        .menu_links li a {
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+        .menu_links li a:hover {
+            text-decoration: underline;
+        }
+
+        /* Statistics Box */
+        .stat-box {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            text-align: center;
+            border-radius: 10px;
+            color: white;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            height: 170px;
+            font-size: 18px;
+            font-weight: bold;
+            gap: 10px;
+        }
+
+        .stat-box i {
+            font-size: 30px;
+        }
+
+        .stat-box:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        /* See All Button */
+        .see-all-btn {
+            display: block;
+            width: 80%;
+            padding: 8px;
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+
+        .see-all-btn:hover {
+            background-color: rgba(255, 255, 255, 0.4);
+        }
+
+        /* Responsive Grid */
+        .row {
+            margin-top: 20px;
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 768px) {
+            .stat-box {
+                height: auto;
+                padding: 15px;
+                font-size: 16px;
+            }
+
+            .menu_links {
+                text-align: center;
+            }
+
+            .menu_links li {
+                display: block;
+                margin: 5px 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- Header Section -->
+<section class="home">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-6 col-md-3">
+                <div class="home-logo">
+                    <img src="C:\Users\DELL\Pictures\logo-nttf.jpg" alt="Logo">
+                </div>
+            </div>
+            <div class="col-6 col-md-9">
+                <ul class="menu_links">
+                    <li><a href="dashboard.php">Dashboard</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Statistics Section -->
+<div class="container my-5">
+    <div class="row g-4 justify-content-center">
+        <div class="col-lg-4 col-md-6 col-sm-6 col-12">
+            <div class="stat-box" style="background-color: #2d5c98;">
+                <i class="fa-solid fa-user-graduate"></i>
+                <div>5<br>STUDENTS</div>
+                <a href="students_list.php" class="see-all-btn">See All →</a>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6 col-sm-6 col-12">
+            <div class="stat-box" style="background-color: #57a639;">
+                <i class="fa-solid fa-bed"></i>
+                <div>6<br>TOTAL ROOMS</div>
+                <a href="manage-rooms.php" class="see-all-btn">See All →</a>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6 col-sm-6 col-12">
+            <div class="stat-box" style="background-color: #148bc8;">
+                <i class="fa-solid fa-book"></i>
+                <div>7<br>TOTAL COURSES</div>
+                <a href="courses.html" class="see-all-btn">See All →</a>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6 col-sm-6 col-12">
+            <div class="stat-box" style="background-color: #1e90ff;">
+                <i class="fa-solid fa-comments"></i>
+                <div>7<br>REGISTERED COMPLAINTS</div>
+                <a href="complaints.html" class="see-all-btn">See All →</a>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6 col-sm-6 col-12">
+            <div class="stat-box" style="background-color: #e74c3c;">
+                <i class="fa-solid fa-exclamation-circle"></i>
+                <div>1<br>NEW COMPLAINTS</div>
+                <a href="new_complaints.html" class="see-all-btn">See All →</a>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6 col-sm-6 col-12">
+            <div class="stat-box" style="background-color: #f39c12;">
+                <i class="fa-solid fa-spinner"></i>
+                <div>1<br>IN PROCESS COMPLAINTS</div>
+                <a href="inprocess_complaints.html" class="see-all-btn">See All →</a>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6 col-sm-6 col-12">
+            <div class="stat-box" style="background-color: #57a639;">
+                <i class="fa-solid fa-check-circle"></i>
+                <div>5<br>CLOSED COMPLAINTS</div>
+                <a href="closed_complaints.html" class="see-all-btn">See All →</a>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6 col-sm-6 col-12">
+            <div class="stat-box" style="background-color: #3498db;">
+                <i class="fa-solid fa-star"></i>
+                <div>4<br>TOTAL FEEDBACKS</div>
+                <a href="feedbacks.html" class="see-all-btn">See All →</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap Script -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mess Management - INR</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<style>
+    body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 800px;
+    margin: auto;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+h1, h2 {
+    color: #333;
+}
+
+.form-container {
+    background: #e3f2fd;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+form label {
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+form input, form select {
+    padding: 8px;
+    width: 80%;
+    margin-top: 5px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+
+button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px;
+    margin-top: 10px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    width: 80%;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th, td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+
+th {
+    background: #007bff;
+    color: white;
+}
+
+canvas {
+    margin-top: 20px;
+    width: 100%;
+}
+
+</style>
+<body>
+    <div class="container">
+        <h1>Mess Management System (₹)</h1>
+
+        <!-- Expense Form -->
+        <div class="form-container">
+            <h2>Add Daily Expense</h2>
+            <form id="expense-form">
+                <label for="category">Category:</label>
+                <select id="category">
+                    <option value="food">Food</option>
+                    <option value="maintenance">Maintenance</option>
+                    <option value="misc">Miscellaneous</option>
+                </select>
+
+                <label for="amount">Amount (₹):</label>
+                <input type="number" id="amount" required>
+
+                <label for="description">Description:</label>
+                <input type="text" id="description">
+
+                <button type="submit">Add Expense</button>
+            </form>
+        </div>
+
+        <!-- Monthly Expense -->
+        <div class="monthly-expense">
+            <h2>Monthly Expense</h2>
+            <p id="monthly-expense">Total: ₹0</p>
+        </div>
+
+        <!-- Expense Table -->
+        <h2>Daily Expenses</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Category</th>
+                    <th>Amount (₹)</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody id="expense-table">
+                <!-- Expenses will be added here dynamically -->
+            </tbody>
+        </table>
+
+        <!-- Expense Chart -->
+        <canvas id="expenseChart"></canvas>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+    loadExpenses();
+    updateMonthlyExpense();
+
+    document.getElementById("expense-form").addEventListener("submit", function (e) {
+        e.preventDefault();
+        addExpense();
+    });
+});
+
+let expenses = [];
+
+// Function to Add New Expense
+function addExpense() {
+    let category = document.getElementById("category").value;
+    let amount = document.getElementById("amount").value;
+    let description = document.getElementById("description").value;
+    let date = new Date().toISOString().split("T")[0];
+
+    if (!amount || amount <= 0) {
+        alert("Enter a valid amount!");
+        return;
+    }
+
+    let expense = {
+        date,
+        category,
+        amount: parseFloat(amount),
+        description
+    };
+
+    expenses.push(expense);
+    saveExpenses();
+    loadExpenses();
+    updateMonthlyExpense();
+}
+
+// Function to Load Daily Expenses
+function loadExpenses() {
+    let tableBody = document.getElementById("expense-table");
+    tableBody.innerHTML = ""; // Clear table before adding new data
+
+    let chartData = [];
+    let chartLabels = [];
+
+    expenses.forEach(expense => {
+        let row = `<tr>
+            <td>${expense.date}</td>
+            <td>${expense.category}</td>
+            <td>₹${expense.amount.toLocaleString('en-IN')}</td>
+            <td>${expense.description || "-"}</td>
+        </tr>`;
+        tableBody.innerHTML += row;
+
+        chartLabels.push(expense.date);
+        chartData.push(expense.amount);
+    });
+
+    renderChart(chartLabels, chartData);
+}
+
+// Function to Update Monthly Expense
+function updateMonthlyExpense() {
+    let total = expenses.reduce((sum, exp) => sum + exp.amount, 0);
+    document.getElementById("monthly-expense").innerText = `Total: ₹${total.toLocaleString('en-IN')}`;
+}
+
+// Function to Render Chart
+function renderChart(labels, data) {
+    let ctx = document.getElementById("expenseChart").getContext("2d");
+    
+    if (window.myChart) {
+        window.myChart.destroy(); // Destroy previous instance if exists
+    }
+
+    window.myChart = new Chart(ctx, {
+        type: "bar",
+        data: {
+            labels: labels,
+            datasets: [{
+                label: "Daily Expenses (₹)",
+                data: data,
+                backgroundColor: "rgba(0, 123, 255, 0.6)",
+                borderColor: "rgba(0, 123, 255, 1)",
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: { beginAtZero: true }
+            }
+        }
+    });
+}
+
+// Function to Save Expenses in Local Storage
+function saveExpenses() {
+    localStorage.setItem("expenses", JSON.stringify(expenses));
+}
+
+// Load expenses from Local Storage when the page is loaded
+window.onload = function () {
+    let savedExpenses = localStorage.getItem("expenses");
+    if (savedExpenses) {
+        expenses = JSON.parse(savedExpenses);
+        loadExpenses();
+        updateMonthlyExpense();
+    }
+};
+
+    </script>
+</body>
+</html>

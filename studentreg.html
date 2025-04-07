@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+  <!-- Meta setup -->
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="keywords" content="">
+  <meta name="decription" content="">
+  <meta name="author" content="Asad Kabir">
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+  <!-- Title -->
+  <title> student registration</title>
+
+  <!-- Fav Icon -->
+  <link rel="icon" href="img/fav.png" />
+
+  <!-- Include Font-Awesome -->
+  <link rel="stylesheet" href="css/all.css" />
+
+  <!-- Include Bootstrap -->
+  <link rel="stylesheet" href="css/bootstrap.css" />
+
+  <!-- Include Wow -->
+  <link rel="stylesheet" href="css/animate.css" />
+
+  <!-- Main StyleSheet -->
+  <link rel="stylesheet" href="style.css" />
+
+
+  <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+  <!-- Responsive CSS -->
+  <link rel="stylesheet" href="css/responsive.css" />
+
+  <link href="css/flaticon.css" rel="stylesheet" type="text/css" /> <!-- flat icons css -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css">
+
+
+  <link href="product/vendor/icons/css/materialdesignicons.min.css" media="all" rel="stylesheet" type="text/css" />
+  <!-- Select2 CSS -->
+
+  <!-- Custom styles for this template -->
+  <link href="product/css/osahan.css" rel="stylesheet">
+  <!-- Owl Carousel -->
+  <link rel="stylesheet" href="product/vendor/owl-carousel/owl.carousel.css">
+  <link rel="stylesheet" href="product/vendor/owl-carousel/owl.theme.css">
+
+
+  <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
+
+</head>
+
+<style>
+  .company-part{
+    text-align:right;
+    margin-top:30px;
+  }
+  .company-part h1{
+    font-size:100px;
+    font-family: "Times New Roman", Times, serif;
+}
+
+  .headerlinks {
+    text-align: justify;
+  }
+
+  .headerlinks li {
+    display: flex;
+    gap: 28px;
+    flex-direction: row;
+    /* align-items: center; */
+    justify-content: center;
+    padding-top: 11px;
+    margin-left: 140%;
+}
+  
+  .services li {
+    display: flex;
+    gap: 20px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding-top: 33px;
+  }
+
+  .home-logo img {
+    border-radius: 1%;
+    WIDTH: 69%;
+    margin-top: -8px;
+    margin-left: -178px;
+  }
+        
+  
+
+  ul.menu_links li a {
+    display: flex;
+  justify-content: flex-end;
+  float: right;
+
+    font-size: 19px;
+    font-weight: bolder;
+    font-family: auto;
+    text-transform: uppercase;
+    color: #FFF;
+  }
+
+  ul.info li a {
+    font-weight: bolder;
+    font-family: auto;
+    text-transform: uppercase;
+  }
+
+  section.home {
+    background-image: linear-gradient(to right,blue, rgb(247, 147, 69));
+    color: #FFF;
+    HEIGHT: 102PX;
+  }
+ 
+        .container2 {
+            
+    max-width: 606px;
+    margin-top: 75px;
+    margin-left: 449px;
+    background: white;
+    padding: 37px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+
+        }
+        label {
+            font-weight: bold;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 10px;
+            width: 100%;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background: #218838;
+        }
+        body {
+     /*background-color: rgb(212, 207, 223)*/;
+     background-image:url(hostel-blur.jpg);
+   
+   background-size: cover;
+}
+</style>
+<body>
+  <!--heading section begins-->
+  <section class="home">`
+    <div class="container">
+      <div class="row">
+        <div class="col-md-2">
+          <div class="home-logo">
+            <img src="C:\Users\DELL\Pictures\logo-nttf.jpg" height="70" width="150">
+          </div>
+        </div>
+        <div class="col-md-7">
+          <div class="headerlinks">
+            <header>
+              <nav>
+                <ul class="menu_links">
+                  <li>
+                    <a href="C:\Internship\index.html">home</a>
+                    <a href="C:\Internship\about.html">about</a>
+                    <a href="C:\Internship\classes.html">Login</a>
+                    <a href="C:\Internship\contact.html">Contact </a>
+                  </li>
+                </ul>
+              </nav>
+            </header>
+
+          </div>
+       
+      </div>
+    </div>
+  </section>
+<!--heading section ends-->
+
+
+<div class="container2">
+    <h2><span style="color: blue;">Student Registration Form</span></h2>
+
+    <!-- Form -->
+    <form action="stud_reg.php" method="POST" enctype="multipart/form-data">
+        <h3>Student Details</h3>
+        <label for="name">Full Name:</label>
+        <input type="text" id="name" name="name" required>
+
+        <label for="roll">Token Number:</label>
+        <input type="text" id="roll" name="roll" required>
+
+        <label for="gender">Gender:</label>
+        <select id="gender" name="gender" required>
+            <option value="">Select</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other</option>
+        </select>
+
+        <label for="dob">Date of Birth:</label>
+        <input type="date" id="dob" name="dob" required>
+
+        <label for="contact">Student Contact:</label>
+        <input type="tel" id="contact" name="contact" required>
+
+        <label for="city"> City:</label>
+        <textarea id="city" name="city" required></textarea>
+
+        <label for="room-number">Room Number:</label>
+<input type="text" id="room-number" name="room-number" placeholder="Enter room number">
+
+<label for="studentPhoto">Student Photo:</label>
+<input type="file" id="student-photo" name="student-photo" accept="image/*">
+<!-- <input type="submit" value="Upload"> -->
+
+
+
+        <h3><span style="color: blue;">Parent/Guardian Details</span></h3>
+        <label for="parent-name">Parent/Guardian Name:</label>
+        <input type="text" id="parent-name" name="parent-name" required>
+
+        <label for="parent-contact">Parent Contact:</label>
+        <input type="tel" id="parent-contact" name="parent-contact" required>
+
+        <label for="address">Address:</label>
+        <textarea id="address" name="address" rows="3" required></textarea>
+
+        <label for="parentPhoto">Parent Photo:</label>
+        <input type="file" id="parent-photo" name="parent-photo" accept="image/*">
+        <!-- <input type="submit" value="Upload"> -->
+
+        
+
+
+        <button type="submit" name="submit">Register</button>
+    </form>
+</div>
+</body>
+</html>
+

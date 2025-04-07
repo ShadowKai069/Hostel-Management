@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory Management - Hostel</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<style>
+    body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 900px;
+    margin: auto;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+h1, h2 {
+    color: #333;
+}
+
+.form-container {
+    background: #e3f2fd;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+form label {
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+form input, form select {
+    padding: 8px;
+    width: 80%;
+    margin-top: 5px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+
+button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px;
+    margin-top: 10px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    width: 80%;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+#search-bar {
+    width: 80%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th, td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+
+th {
+    background: #007bff;
+    color: white;
+}
+
+canvas {
+    margin-top: 20px;
+    width: 100%;
+}
+
+</style>
+<body>
+    <div class="container">
+        <h1>Hostel Inventory Management</h1>
+
+        <!-- Add Inventory Form -->
+        <div class="form-container">
+            <h2>Add Inventory Item</h2>
+            <form id="inventory-form">
+                <label for="item-name">Item Name:</label>
+                <input type="text" id="item-name" required>
+
+                <label for="quantity">Quantity:</label>
+                <input type="number" id="quantity" required>
+
+                <label for="category">Category:</label>
+                <select id="category">
+                    <option value="furniture">Furniture</option>
+                    <option value="electronics">Electronics</option>
+                    <option value="kitchen">Kitchen Items</option>
+                    <option value="misc">Miscellaneous</option>
+                </select>
+
+                <label for="status">Status:</label>
+                <select id="status">
+                    <option value="available">Available</option>
+                    <option value="issued">Issued</option>
+                </select>
+
+                <button type="submit">Add Item</button>
+            </form>
+        </div>
+
+        <!-- Search Bar -->
+        <input type="text" id="search-bar" placeholder="Search Inventory...">
+
+        <!-- Inventory Table -->
+        <h2>Inventory Items</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Item Name</th>
+                    <th>Category</th>
+                    <th>Quantity</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="inventory-table">
+                <!-- Inventory items will be added here dynamically -->
+            </tbody>
+        </table>
+
+        <!-- Inventory Chart -->
+        <canvas id="inventoryChart"></canvas>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+    loadInventory();
+    document.getElementById("inventory-form").addEventListener("submit", function (e) {
+        e.preventDefault();
+        addInventoryItem();
+    });
+
+    document.getElementById("search-bar").addEventListener("input", searchInventory);
+});
+
+let inventory = [];
+
+// Function to Add New Inventory Item
+function addInventoryItem() {
+    let itemName = document.getElementById("item-name").value;
+    let quantity = document.getElementById("quantity").value;
+    let category = document.getElementById("category").value;
+    let status = document.getElementById("status").value;
+
+    if (!itemName || quantity <= 0) {
+        alert("Enter valid item details!");
+        return;
+    }
+
+    let item = {
+        id: Date.now(),
+        itemName,
+        quantity: parseInt(quantity),
+        category,
+        status
+    };
+
+    inventory.push(item);
+    saveInventory();
+    loadInventory();
+}
+
+// Function to Load Inventory Items
+function loadInventory() {
+    let tableBody = document.getElementById("inventory-table");
+    tableBody.innerHTML = ""; // Clear table before adding new data
+
+    let categoryCounts = { furniture: 0, electronics: 0, kitchen: 0, misc: 0 };
+
+    inventory.forEach(item => {
+        let row = `<tr>
+            <td>${item.itemName}</td>
+            <td>${item.category}</td>
+            <td>${item.quantity}</td>
+            <td>${item.status}</td>
+            <td>
+                <button onclick="deleteItem(${item.id})">Delete</button>
+            </td>
+        </tr>`;
+        tableBody.innerHTML += row;
+
+        categoryCounts[item.category] += item.quantity;
+    });
+
+    renderChart(categoryCounts);
+}
+
+// Function to Delete Inventory Item
+function deleteItem(id) {
+    inventory = inventory.filter(item => item.id !== id);
+    saveInventory();
+    loadInventory();
+}
+
+// Function to Save Inventory to Local Storage
+function saveInventory() {
+    localStorage.setItem("inventory", JSON.stringify(inventory));
+}
+
+// Load Inventory from Local Storage
+window.onload = function () {
+    let savedInventory = localStorage.getItem("inventory");
+    if (savedInventory) {
+        inventory = JSON.parse(savedInventory);
+        loadInventory();
+    }
+};
+
+// Function to Search Inventory
+function searchInventory() {
+    let query = document.getElementById("search-bar").value.toLowerCase();
+    let filteredInventory = inventory.filter(item => item.itemName.toLowerCase().includes(query));
+    inventory = filteredInventory;
+    loadInventory();
+}
+
+// Function to Render Chart
+function renderChart(data) {
+    let ctx = document.getElementById("inventoryChart").getContext("2d");
+    
+    if (window.myChart) {
+        window.myChart.destroy();
+    }
+
+    window.myChart = new Chart(ctx, {
+        type: "pie",
+        data: {
+            labels: Object.keys(data),
+            datasets: [{
+                label: "Inventory Distribution",
+                data: Object.values(data),
+                backgroundColor: ["red", "blue", "green", "yellow"],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true
+        }
+    });
+}
+
+    </script>
+</body>
+</html>

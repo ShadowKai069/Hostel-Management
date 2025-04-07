@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hostel Expense Management</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 900px;
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .summary-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.summary-card {
+    flex: 1;
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 1.2em;
+    font-weight: bold;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.summary-card h4 {
+    margin-bottom: 8px;
+    font-size: 1.1em;
+}
+
+.budget {
+    background-color: #e3f2fd; /* Light Blue */
+    color: #0277bd;
+}
+
+.spent {
+    background-color: #ffebee; /* Light Red */
+    color: #c62828;
+}
+
+.remaining {
+    background-color: #e8f5e9; /* Light Green */
+    color: #2e7d32;
+}
+
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>🏠 Hostel Expense Management</h2>
+
+        <h3>💰 Allot Budget</h3>
+        <label>Month</label>
+        <input type="month" id="budgetMonth">
+        <label>Total Budget</label>
+        <input type="number" id="totalBudget" placeholder="Enter budget">
+        <button onclick="allotBudget()">Allot Budget</button>
+
+        <h3>📅 Add Monthly Expenses</h3>
+        <label>Month</label>
+        <input type="month" id="month">
+        <label>Expense Category</label>
+        <select id="category">
+            <option value="Staff Salaries">Staff Salaries</option>
+            <option value="Utility Bills">Utility Bills</option>
+            <option value="Repairs & Maintenance">Repairs & Maintenance</option>
+            <option value="Miscellaneous">Miscellaneous</option>
+        </select>
+        <label>Amount</label>
+        <input type="number" id="amount" placeholder="Enter amount">
+        <button onclick="addExpense()">Add Expense</button>
+        
+        <h3>📊 Expense Summary</h3>
+<div class="summary-container">
+    <div class="summary-card budget">
+        <h4>Total Budget</h4>
+        <p id="displayBudget">Rs 0.00</p>
+    </div>
+    <div class="summary-card spent">
+        <h4>Total Spent</h4>
+        <p id="totalSpent">Rs 0.00</p>
+    </div>
+    <div class="summary-card remaining">
+        <h4>Remaining Balance</h4>
+        <p id="remainingBalance">Rs 0.00</p>
+    </div>
+</div>
+
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>Month</th>
+                    <th>Category</th>
+                    <th>Amount</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="expenseTable"></tbody>
+        </table>
+    </div>
+
+    <script>
+        function allotBudget() {
+            let budget = new FormData();
+            budget.append("month", document.getElementById("budgetMonth").value);
+            budget.append("total_budget", document.getElementById("totalBudget").value);
+
+            fetch("allot_budget.php", {
+                method: "POST",
+                body: budget
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+                fetchExpenses();
+            });
+        }
+
+        function addExpense() {
+            let expense = new FormData();
+            expense.append("month", document.getElementById("month").value);
+            expense.append("category", document.getElementById("category").value);
+            expense.append("amount", document.getElementById("amount").value);
+
+            fetch("add_expense.php", {
+                method: "POST",
+                body: expense
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+                fetchExpenses();
+            });
+        }
+
+        function removeExpense(id) {
+    let formData = new FormData();
+    formData.append("id", id);
+
+    fetch("remove_expense.php", {
+        method: "POST",
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        alert(data.message);
+        fetchExpenses(); // Refresh the table
+    });
+}
+
+function fetchExpenses() {
+    let month = document.getElementById("month").value;
+
+    if (!month) {
+        month = new Date().toISOString().slice(0, 7); // Default to current month
+        document.getElementById("month").value = month;
+    }
+
+    fetch("get_expenses.php?month=" + month)
+    .then(response => response.json())
+    .then(data => {
+        let tableBody = document.getElementById("expenseTable");
+        tableBody.innerHTML = "";
+        let totalSpent = 0;
+
+        // Display expenses in table
+        data.expenses.forEach(expense => {
+            totalSpent += parseFloat(expense.amount);
+            let row = `<tr>
+                <td>${expense.month}</td>
+                <td>${expense.category}</td>
+                <td>Rs ${parseFloat(expense.amount).toFixed(2)}</td>
+                <td><button onclick="removeExpense(${expense.id})">Remove</button></td>
+            </tr>`;
+            tableBody.innerHTML += row;
+        });
+
+        // Ensure numbers are correctly displayed
+        document.getElementById("displayBudget").innerText = `Rs ${data.total_budget.toFixed(2)}`;
+        document.getElementById("totalSpent").innerText = `Rs ${data.total_spent.toFixed(2)}`;
+        document.getElementById("remainingBalance").innerText = `Rs ${data.remaining_balance.toFixed(2)}`;
+
+    })
+    .catch(error => console.error("Error fetching expenses:", error));
+}
+
+// Run fetchExpenses() when the page loads
+document.addEventListener("DOMContentLoaded", function() {
+    fetchExpenses();
+});
+
+        fetchExpenses();
+    </script>
+</body>
+</html>
